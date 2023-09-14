@@ -14,7 +14,7 @@ class KategoriModel extends Model
     protected $returnType = 'object';
     protected $useSoftDeletes = false;
 
-    protected $allowedFields = ['namaKategori'];
+    protected $allowedFields = ['namaKategori','iconKategori','colorKategori','slugKategori'];
 
     
 
