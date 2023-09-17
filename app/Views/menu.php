@@ -166,59 +166,37 @@
       <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
         <div class="row">
-          <?php foreach ($kategori as $key => $value):?>
-          <div class="col-lg-4 col-6">
-            <!-- small box -->
-            <div class="small-box bg-<?= $value->colourKategori ?>">
-              <div class="inner">
-                
+          <div class="col-md-12">
+            <div class="card">
+  <h5 class="card-header">Daftar Menu</h5>
+  <div class="card-body">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambahmenu">Tambah</button>
+    <p/>
+    <table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">No</th>
+      <th scope="col">Nama Menu</th>
+      <th scope="col">Harga</th>
+      <th scope="col">Kategori</th>
+    </tr>
+  </thead>
+  <tbody>
+<?php $no=1; foreach ($produk as $key => $value):?>
 
-                <h2><?= $value->namaKategori ?></h2>
-                <p>klik di sini</p>
-              </div>
-              <div class="icon">
-                <i class="fas <?= $value->iconKategori ?>"></i>
-              </div>
-            </div>
-          </div>
-          <?php endforeach?>
-          <!-- ./col -->
-          
-        </div>
-        <!-- /.row -->
-        <div class="row">
-          <div class="col-md-9">
-            <div class="card">
-              <div class="card-header">
-                Menu
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <?php foreach ($produk as $key => $value):?>
-                  <div class="col-md-4">
-                    <div class="card">
-                      <img src="<?= base_url('assets/img/'.$value->slugKategori.'/'.$value->gambarProduk) ?>" class="card-img-top" alt="<?= $value->namaProduk ?>" style="height:12rem;">
-                      <div class="card-body">
-                        <h5 class="card-title"><?= $value->namaProduk ?></h5>
-                        <p class="card-text"><?= number_to_currency($value->hargaProduk,'Rp.','id_ID',2) ?></p>
-                      </div>
-                    </div>
-                  </div>
-                  <?php endforeach?>
-                  
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="card">
-              <div class="card-header">
-                Keranjang
-              </div>
-              <div class="card-body">
-                
-              </div>
-            </div>
+    <tr>
+      <th scope="row"><?= $no++ ?></th>
+      <td><?= $value->namaProduk ?></td>
+      <td><?= number_to_currency($value->hargaProduk,'Rp.','id_ID',2) ?></td>
+      <td><?= $value->namaKategori ?></td>
+    </tr>
+<?php endforeach?>
+  </tbody>
+</table>
+   
+  </div>
+</div>
+           
           </div>
         </div>
         <!-- /.row (main row) -->
@@ -242,6 +220,54 @@
   <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
+
+<!-- Tambah Menu -->
+<div class="modal fade" id="tambahmenu" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Tambah Menu</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="form-group">
+    <label for="kategoriproduk">Kategori Menu</label>
+    <select class="form-control" id="kategoriproduk" name="kategoriProduk">
+      <option>Pilih Kategori</option>
+      <?php foreach ($kategori as $key => $value):?>
+      <option value="<?= $value->idKategori ?>"><?= $value->namaKategori ?></option>
+      <?php endforeach?>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="skuproduk">Sku</label>
+    <input type="text" class="form-control" id="skuproduk" placeholder="xx-001" name="skuProduk">
+  </div>
+  <div class="form-group">
+    <label for="namaproduk">Nama Menu</label>
+    <input type="text" class="form-control" id="namaproduk" placeholder="isi nama menu" name="namaproduk">
+  </div>
+  
+  <div class="form-group">
+    <label for="hargaproduk">Harga Menu</label>
+    <input type="number" class="form-control" id="hargaproduk" placeholder="isi harga menu" name="hargaproduk">
+  </div>
+  <div class="form-group">
+    <label for="gambarproduk">Gambar Menu</label>
+    <input type="file" class="form-control-file" id="gambarproduk" name="gambarproduk">
+  </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
 
 <!-- jQuery -->
 <script src="assets/plugins/jquery/jquery.min.js"></script>

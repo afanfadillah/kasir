@@ -3,7 +3,7 @@
 namespace App\Controllers;
 use App\Models\KategoriModel;
 use App\Models\ProdukModel;
-class Home extends BaseController
+class Menu extends BaseController
 {
     protected $modelKategori;
     protected $modelProduk;
@@ -14,12 +14,12 @@ class Home extends BaseController
     public function index(): string
     {
         $data = [
-            'title'=>'Kasir',
+            'title'=>'Menu',
             'kategori'=>$this->modelKategori->findAll(),
             'produk'=>$this->modelProduk->getAllproduk()->get()->getResult()
         ];
         
         
-        return view('dashboard',$data);
+        return view('menu',$data);
     }
 }
