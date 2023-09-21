@@ -169,6 +169,7 @@
           <?php foreach ($kategori as $key => $value):?>
           <div class="col-lg-4 col-6">
             <!-- small box -->
+            <a href="/kasir?kat=<?=$value->idKategori ?>" style="color:inherit">
             <div class="small-box bg-<?= $value->colourKategori ?>">
               <div class="inner">
                 
@@ -180,6 +181,7 @@
                 <i class="fas <?= $value->iconKategori ?>"></i>
               </div>
             </div>
+          </a>
           </div>
           <?php endforeach?>
           <!-- ./col -->
