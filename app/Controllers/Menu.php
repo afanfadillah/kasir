@@ -23,6 +23,7 @@ class Menu extends BaseController
         return view('menu',$data);
     }
     public function tambah() {
+        // upload file
         $gambar = $this->request->getfile('gambarProduk');
         $gambar->move('assets/img/'.explode(",",$this->request->getVar('kategoriProduk'))[1]);
         $namagambar = $gambar->getName();
@@ -47,6 +48,30 @@ class Menu extends BaseController
         $exe = $this->modelProduk->delete($id);
         if ($exe){
             session()->setFlashdata('success', 'Menu Berhasil Di Hapus');
+            return redirect()->to('menu');
+        }
+        
+    }
+    public function ubah($id){
+
+        $infoGambar = $this->request->getVar('infoGambar');
+        unlink('assets/img/'. explode(",",$infoGambar)[0].'/'.explode(",",$infoGambar)[1]);
+
+        $gambar = $this->request->getfile('gambarProduk');
+        $gambar->move('assets/img/'.explode(",",$this->request->getVar('kategoriProduk'))[1]);
+        $namagambar = $gambar->getName();
+        $dataUbah = [
+            'skuProduk' => $this->request->getVar('skuProduk'),
+            'namaProduk' => $this->request->getVar('namaProduk'),
+            'hargaProduk' => $this->request->getVar('hargaProduk'),
+            'kategoriProduk' =>explode(",",$this->request->getVar('kategoriProduk'))[0],
+            'tersediaProduk' => '1',
+            'gambarProduk' => $namagambar
+        ];
+
+        $exe = $this->modelProduk->update($id,$dataUbah);
+        if($exe) {
+            session()->setFlashdata('success', 'Menu Berhasil Di Ubah');
             return redirect()->to('menu');
         }
     }

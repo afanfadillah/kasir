@@ -199,7 +199,7 @@
       <td><?= $value->namaKategori ?></td>
       <td style="text-align: center;">
         <button class="btn btn-info" type="button" data-toggle="modal" data-target="#viewGambar<?= $value->idProduk ?>"><i class="fas fa-eye"></i></button>
-        <button class="btn btn-success"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#editmenu<?= $value->idProduk ?>"><i class="fas fa-edit"></i></button>
         <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#hapusmenu<?= $value->idProduk ?>"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
@@ -324,6 +324,59 @@
     <div class="modal-body">
       Apakah Anda Yakin Ingin Menghapus Menu <strong><?= $value->namaProduk ?></strong>
 </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" >Oke</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php endforeach?>
+
+<!--  Edit Menu -->
+<?php foreach ($produk as $key => $valueEdit) :?> 
+<div class="modal fade" id="editmenu<?= $valueEdit->idProduk ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Menu <?= $valueEdit->namaProduk ?></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="menu/<?= $valueEdit->idProduk ?>" method="post" enctype="multipart/form-data">
+        <?= csrf_field() ?>
+        <input type="hidden" name="_method" value="put">
+        <input type="hidden" name="infoGambar" value="<?= $valueEdit->slugKategori ?>,<?= $valueEdit->gambarProduk ?>">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="kategoriproduk">Kategori Menu</label>
+        <select class="form-control" id="kategoriproduk" name="kategoriProduk">
+          <option>Pilih Kategori</option>
+          <?php foreach ($kategori as $key => $value):?>
+          <option value="<?= $value->idKategori ?>,<?= $value->slugKategori ?>" <?= $value->idKategori == $valueEdit->kategoriProduk ? 'selected' : ''?>><?= $value->namaKategori ?></option>
+          <?php endforeach?>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="skuproduk">Sku</label>
+        <input type="text" class="form-control" id="skuproduk" placeholder="xx-001" name="skuProduk" value="<?= $valueEdit->skuProduk?>">
+      </div>
+      <div class="form-group">
+        <label for="namaproduk">Nama Menu</label>
+        <input type="text" class="form-control" id="namaproduk" placeholder="isi nama menu" name="namaProduk" value="<?= $valueEdit->namaProduk?>">
+      </div>
+      <div class="form-group">
+        <label for="hargaproduk">Harga Menu</label>
+        <input type="number" class="form-control" id="hargaproduk" placeholder="isi harga menu" name="hargaProduk" value="<?= $valueEdit->hargaProduk?>">
+      </div>
+      <div class="form-group">
+        <label for="gambarproduk">Gambar Menu</label>
+        <input type="file" class="form-control-file" id="gambarproduk" name="gambarProduk" value="<?= $valueEdit->gambarProduk?>">
+      </div>
+    </div>
       
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
