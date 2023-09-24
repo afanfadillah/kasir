@@ -53,13 +53,18 @@ class Menu extends BaseController
         
     }
     public function ubah($id){
-
         $infoGambar = $this->request->getVar('infoGambar');
-        unlink('assets/img/'. explode(",",$infoGambar)[0].'/'.explode(",",$infoGambar)[1]);
-
+        
         $gambar = $this->request->getfile('gambarProduk');
-        $gambar->move('assets/img/'.explode(",",$this->request->getVar('kategoriProduk'))[1]);
-        $namagambar = $gambar->getName();
+        
+        if ($gambar->getError() == 4) {
+            $namagambar = explode(",",$infoGambar)[1];
+        }else {
+            unlink('assets/img/'. explode(",",$infoGambar)[0].'/'.explode(",",$infoGambar)[1]);
+            $gambar->move('assets/img/'.explode(",",$this->request->getVar('kategoriProduk'))[1]);
+            $namagambar = $gambar->getName();
+        }
+        
         $dataUbah = [
             'skuProduk' => $this->request->getVar('skuProduk'),
             'namaProduk' => $this->request->getVar('namaProduk'),
