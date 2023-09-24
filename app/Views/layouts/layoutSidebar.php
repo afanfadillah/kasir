@@ -25,7 +25,41 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          
+
+          <!-- guest -->
+                <?php if (in_groups(['guest']) ) : ?>
+          <li class="nav-item">
+            <a href="welcome" class="nav-link">
+              <i class="nav-icon fas fa-home"></i>
+              <p>
+                Welcome
+                
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="logout" class="nav-link">
+              <i class="nav-icon fas fa-power-off"></i>
+              <p>
+                logout
+                
+              </p>
+            </a>
+          </li>
+          <?php endif ?>
+          <!-- end guest -->
+
+          <!-- manager -->
+                <?php if (in_groups(['manager']) ) : ?>
+                  <li class="nav-item">
+                    <a href="welcome" class="nav-link">
+                      <i class="nav-icon fas fa-home"></i>
+                      <p>
+                        Welcome
+                        
+                      </p>
+                    </a>
+                  </li>
           <li class="nav-item">
             <a href="menu" class="nav-link">
               <i class="nav-icon fas fa-shopping-cart"></i>
@@ -62,6 +96,41 @@
               </p>
             </a>
           </li>
+          <?php endif ?>
+          <!-- end manager -->
+
+          <!-- kasir -->
+
+          <?php if (in_groups(['kasir']) ) : ?>
+                  <li class="nav-item">
+                    <a href="welcome" class="nav-link">
+                      <i class="nav-icon fas fa-home"></i>
+                      <p>
+                        Welcome
+                        
+                      </p>
+                    </a>
+                  </li>
+          <li class="nav-item">
+            <a href="kasir" class="nav-link">
+              <i class="nav-icon fas fa-cash-register"></i>
+              <p>
+                Kasir
+                
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="logout" class="nav-link">
+              <i class="nav-icon fas fa-power-off"></i>
+              <p>
+                logout
+                
+              </p>
+            </a>
+          </li>
+          <?php endif ?>
+            <!-- end kasir -->
           
         </ul>
       </nav>

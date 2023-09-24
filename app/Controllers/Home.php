@@ -32,4 +32,15 @@ class Home extends BaseController
         
         return view('dashboard',$data);
     }
+    public function welcome(): string
+    {
+        
+        $data = [
+            'title'=>'Welcome',
+            
+        ];
+        
+        
+        return view('welcome',$data);
+    }
 }
