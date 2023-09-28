@@ -136,5 +136,47 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="assets/js/pages/dashboard.js"></script>
 <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+<script>
+function addKeranjang(idProduk){
+  $.ajax({
+    url:"/kasir",
+    type:"POST",
+    data:{
+      'idProduk':idProduk,
+    },
+    success: function(response){
+      // console.log(response);
+      $('#itemKeranjang').empty();
+            let total = 0;
+            JSON.parse(response)['data'].map((item, idx) => {
+              total = total + parseInt(item.jumlah) * parseInt(item.hargaProduk)
+              hargaCurrency = new Intl.NumberFormat('id-ID', {
+                  style: 'currency',
+                  currency: 'IDR',
+              }).format(item.hargaProduk).replace(/,00$/, '')
+              let ele = '';
+              ele += '<div class="callout callout-info" id="itemProduk' + item.idProduk + '">'
+              ele += '<div class="row">'
+              ele += '<div class="col-2 center">'
+              ele += '<h3><span class="badge badge-primary">' + item.jumlah + '</span></h3>'
+              ele += '</div>'
+              ele += '<div class="col-7">'
+              ele += '<h5>' + item.namaProduk + '</h5>'
+              ele += '<p>' + hargaCurrency + '</p>'
+              ele += '</div>'
+              ele += '<div class="col-3">'
+              ele += '<button type="button" class="btn btn-danger" onclick="hapusKeranjang(' + item.idProduk + ')"><i class="fas fa-trash"></i></button>'
+              ele += '</div>'
+              ele += '</div>'
+              ele += ' </div>'
+              $('#itemKeranjang').append(ele);
+          });
+    },
+    error: function(response){
+      console.log(response);
+    },
+  });
+  }
+</script>
 </body>
 </html>

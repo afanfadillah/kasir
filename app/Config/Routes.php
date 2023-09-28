@@ -8,9 +8,10 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->get('welcome', 'Home::welcome');
 
-$routes->get('kasir', 'Home::index');
+$routes->get('kasir', 'Home::index',['filter'=>'role:manager,kasir']);
+$routes->post('kasir', 'Home::addKeranjang');
 
-$routes->get('menu', 'Menu::index');
-$routes->post('menu', 'Menu::tambah');
-$routes->put('menu/(:num)', 'Menu::ubah/$1');
-$routes->delete('menu/(:num)', 'Menu::hapus/$1');
+$routes->get('menu', 'Menu::index',['filter'=>'role:manager']);
+$routes->post('menu', 'Menu::tambah',['filter'=>'role:manager']);
+$routes->put('menu/(:num)', 'Menu::ubah/$1',['filter'=>'role:manager']);
+$routes->delete('menu/(:num)', 'Menu::hapus/$1',['filter'=>'role:manager']);

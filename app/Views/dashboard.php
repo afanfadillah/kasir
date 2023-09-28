@@ -61,7 +61,7 @@
               <div class="card-body">
                 <div class="row">
                   <?php foreach ($produk as $key => $value):?>
-                  <div class="col-md-4">
+                  <div class="col-md-4" onclick="addKeranjang(<?=$value->idProduk ?>)">
                     <div class="card">
                       <img src="<?= base_url('assets/img/'.$value->slugKategori.'/'.$value->gambarProduk) ?>" class="card-img-top" alt="<?= $value->namaProduk ?>" style="height:12rem;">
                       <div class="card-body">
@@ -82,7 +82,24 @@
                 Keranjang
               </div>
               <div class="card-body">
-                
+                <div id="itemKeranjang">
+                  <?php foreach ($keranjang as $key => $value):?>
+                    <div class="callout callout-info" id="itemProduk' + item.idProduk + '">
+                      <div class="row">
+                      <div class="col-2 center">
+                      <h3><span class="badge badge-primary"><?= $value->jumlah?></span></h3>
+                      </div>
+                      <div class="col-7">
+                      <h5><?= $value->namaProduk?></h5>
+                      <p><?= number_to_currency((float)$value->hargaProduk,'IDR','id_ID') ?></p>
+                      </div>
+                      <div class="col-3">
+                      <button type="button" class="btn btn-danger" onclick="hapusKeranjang(<?= $value->idProduk?>)"><i class="fas fa-trash"></i></button>
+                      </div>
+                      </div>
+                    </div>
+                  <?php endforeach?>
+                </div>
               </div>
             </div>
           </div>
