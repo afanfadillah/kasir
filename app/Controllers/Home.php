@@ -4,17 +4,20 @@ namespace App\Controllers;
 use App\Models\KategoriModel;
 use App\Models\ProdukModel;
 use App\Models\KeranjangModel;
+use App\Models\TransaksiModel;
 class Home extends BaseController
 {
     protected $modelKategori;
     protected $modelProduk;
     protected $modelKeranjang;
+    protected $modelTransaksi;
 
 
     function __construct(){
         $this->modelKategori = new KategoriModel();
         $this->modelProduk = new ProdukModel();
         $this->modelKeranjang = new KeranjangModel();
+        $this->modelTransaksi = new TransaksiModel();
     }
     public function index(): string
     {
@@ -30,8 +33,18 @@ class Home extends BaseController
         }
 
         $keranjang=$this->modelKeranjang->findAll();
+
+        $total = 0;
+
         if (count($keranjang)>0){
             $keranjang=json_decode($keranjang[0]->data)->data;
+
+            foreach ($keranjang as $key => $value) {
+                $total = $total + ((int)$value->jumlah * (int)$value->hargaProduk);
+
+            }
+
+
         }else{
             $keranjang=[];
         }
@@ -40,7 +53,8 @@ class Home extends BaseController
             'title'=>'Kasir',
             'kategori'=>$this->modelKategori->findAll(),
             'produk'=>$kategorilist,
-            'keranjang'=>$keranjang
+            'keranjang'=>$keranjang,
+            'total'=>$total,
         ];
         
         
@@ -119,4 +133,72 @@ class Home extends BaseController
 
 
     } 
+public function hapusKeranjang()
+    {
+        $id=$this->request->getVar('idProduk');
+        $keranjang=$this->modelKeranjang->findAll();
+        $keranjang = json_decode($keranjang[0]->data)->data;
+        $itemKeranjang = [];
+
+        foreach ($keranjang as $key => $value){
+            if ($value->idProduk !== $id){
+                $itemKeranjang[] = $value;
+            }
+        }
+
+        $dataUpdate = [
+            'data' => json_encode(['data' => $itemKeranjang])
+        ];
+        $this->modelKeranjang->update(1,$dataUpdate);
+
+        $keranjangNew = $this->modelKeranjang->where(['id' => 1])->findAll();
+        echo $keranjangNew[0]->data;
+    }
+
+    public function bayarPesanan()
+    {
+        $keranjang = $this->modelKeranjang->where(['id' => 1])->findAll();
+
+        if (count($keranjang) == 0){
+            echo json_encode(['status' => false]);
+            exit;  // program berhenti membaca coding di baris ini
+
+        }
+        $keranjang = json_decode($keranjang[0]->data)->data;
+        if (count($keranjang) > 0){
+            echo json_encode(['status'=> true]);
+        }else{
+            echo json_encode(['status'=> false]);
+        };
+    }
+    public function simpanTransaksi()
+    {
+        $keranjangRaw = $this->modelKeranjang->where(['id'=> 1])->findAll();
+        $keranjang = json_decode($keranjangRaw[0]->data)->data;
+        $grandTotal = 0;
+        foreach ($keranjang as $key => $value) {
+            $grandTotal = $grandTotal + ((int)$value->jumlah * (int)$value->hargaProduk);
+        }
+        $dataSimpan = [
+            'emailKasirTransaksi' => user()->email,
+            'grandTotalTransaksi' => $grandTotal,
+            'cashTransaksi' => $this->request->getVar('cash'),
+            'itemTransaksi' => $keranjangRaw[0]->data,
+            'tanggalBayarTransaksi' => date("Y-m-d H:i:s")
+
+        ];
+        if ($this->modelTransaksi->insert($dataSimpan)){
+            $this->modelKeranjang->delete(1);
+            return redirect()->to('sukses');
+        }
+    }
+    public function suksesTransaksi(){
+        $data = [
+            'title'=>'Pembayaran Sukses',
+            
+        ];
+        
+        
+        return view('sukses',$data);
+    }
 }

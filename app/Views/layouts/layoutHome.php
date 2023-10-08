@@ -170,12 +170,71 @@ function addKeranjang(idProduk){
               ele += '</div>'
               ele += ' </div>'
               $('#itemKeranjang').append(ele);
+
+              $('.harga').empty();
+              let formatCurrency = new Intl.NumberFormat('id-ID',{
+                style: 'currency',
+                currency: 'IDR',
+              }).format(total).replace(/,00$/,'')
+              $('.harga').append('Total : '+ formatCurrency);
           });
     },
     error: function(response){
       console.log(response);
     },
   });
+  }
+  function hapusKeranjang(idProduk){
+    $.ajax({
+      url:"/kasir/keranjang",
+      type:"POST",
+      data: {
+        'idProduk' : idProduk
+      },
+      success: function(response){
+        // console.log(JSON.parse(response));
+        let total = 0;
+        JSON.parse(response)['data'].map((item,idx)=>{
+          total = total + parseInt(item.jumlah) * parseInt(item.hargaProduk)
+        });
+
+        let ele = document.getElementById('itemProduk'+idProduk)
+        ele.remove()
+
+        $('.harga').empty();
+              let formatCurrency = new Intl.NumberFormat('id-ID',{
+                style: 'currency',
+                currency: 'IDR',
+              }).format(total).replace(/,00$/,'')
+              $('.harga').append('Total : '+ formatCurrency);
+      },
+      error: function(xhr, status, error){
+        console.log('error:',status,xhr);
+      }
+    });
+  }
+  
+  function bayar(user){
+    $.ajax({
+      url:"/kasir/bayar",
+      type:"POST",
+      data: {
+        'user' : user
+      },
+      success: function(response){
+        if (JSON.parse(response)['status']){
+          // show models
+          $('#modalbayar').modal('show')
+        }else{
+          alert('keranjang masih kosong')
+        }
+      },
+        error: function(xhr, status, error){
+          console.log('error:',status,xhr);
+        }
+      });
+
+  
   }
 </script>
 </body>

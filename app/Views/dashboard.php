@@ -28,6 +28,10 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
+        <div class="callout callout-info d-flex align-items-center justify-content-between">
+          <h1 class="harga">Total : <?= number_to_currency($total,'Rp.','id_ID',2) ?></h1>
+          <button type="submit" class="btn btn-success ml-auto" onclick="bayar('<?= user()->email?>')">Bayar</button>
+        </div>
         <!-- Small boxes (Stat box) -->
         <div class="row">
           <?php foreach ($kategori as $key => $value):?>
@@ -84,7 +88,7 @@
               <div class="card-body">
                 <div id="itemKeranjang">
                   <?php foreach ($keranjang as $key => $value):?>
-                    <div class="callout callout-info" id="itemProduk' + item.idProduk + '">
+                    <div class="callout callout-info" id="itemProduk<?= $value->idProduk?>">
                       <div class="row">
                       <div class="col-2 center">
                       <h3><span class="badge badge-primary"><?= $value->jumlah?></span></h3>
@@ -110,6 +114,31 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+  <!-- Modal -->
+  <div class="modal fade" id="modalbayar" tabindex="-1" aria-labelledby="modalbayarLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <form action="/kasir/pembayaran" method="post">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="modalbayarLabel">Pembayaran</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <div class="row">
+                      <div class="col-md-12">
+                          <input type="number" name="cash" class="form-control">
+                      </div>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Simpan</button>
+              </div>
+          </form>
+          </div>
+      </div>
+  </div>
   <?= view('layouts/layoutFooter'); ?>
   <?= $this->endSection(); ?>
 
