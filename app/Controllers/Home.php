@@ -179,6 +179,13 @@ public function hapusKeranjang()
         foreach ($keranjang as $key => $value) {
             $grandTotal = $grandTotal + ((int)$value->jumlah * (int)$value->hargaProduk);
         }
+        if ((int)$grandTotal > (int)$this->request->getVar('cash')) {
+            $uangKurang = (int)$grandTotal-(int)$this->request->getVar('cash');
+            session()->setFlashdata('failed','Uang kurang sebesar '.  number_to_currency((float)$uangKurang,'IDR','id_ID') );
+            
+            return redirect()->to('gagal');
+        }
+
         $dataSimpan = [
             'emailKasirTransaksi' => user()->email,
             'grandTotalTransaksi' => $grandTotal,
@@ -189,6 +196,11 @@ public function hapusKeranjang()
         ];
         if ($this->modelTransaksi->insert($dataSimpan)){
             $this->modelKeranjang->delete(1);
+            if (((int)$this->request->getVar('cash')-(int)$grandTotal) > 0){
+                $kembalian=(int)$this->request->getVar('cash')-(int)$grandTotal;
+                session()->setFlashdata('messsage','kembalian sebesar '.  number_to_currency((float)$kembalian,'IDR','id_ID') );
+                
+            }
             return redirect()->to('sukses');
         }
     }
@@ -200,5 +212,14 @@ public function hapusKeranjang()
         
         
         return view('sukses',$data);
+    }
+    public function gagalTransaksi(){
+        $data = [
+            'title'=>'Pembayaran Gagal',
+            
+        ];
+        
+        
+        return view('gagal',$data);
     }
 }

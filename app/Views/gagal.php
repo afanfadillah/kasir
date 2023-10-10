@@ -29,13 +29,12 @@
     <section class="content">
       
       <center>
-    <dotlottie-player src="https://lottie.host/af1ed5d8-2070-403b-aff3-7c6de2359066/4hJKUtlbPe.json" background="transparent" speed="1" style="width: 500px; height: 500px;" loop autoplay></dotlottie-player>
-    <h1>Pembayaran Sukses</h1>
-    <?php if (session()->getFlashdata('messsage')): ?>
-    <h4 class="text-success"><?= session()->getFlashdata('messsage') ?></h4>
-    <?php endif ?>
+    <dotlottie-player src="https://lottie.host/5f1fe372-7dfd-4862-9d00-c632c95acf31/wsk8FQxXFe.json" background="transparent" speed="1" style="width: 500px; height: 500px;" loop autoplay></dotlottie-player>
+    <h1>Pembayaran Gagal</h1>
+    <h4 class="text-danger"><?= session()->getFlashdata('failed') ?></h4>
     <a href="/kasir">Kehalaman Kasir</a>
     </center>
+    
     
     </section>
     <!-- /.content -->
