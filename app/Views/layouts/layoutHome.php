@@ -25,6 +25,8 @@
   <link rel="stylesheet" href="assets/plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="assets/plugins/summernote/summernote-bs4.min.css">
+
+  
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -233,9 +235,11 @@ function addKeranjang(idProduk){
           console.log('error:',status,xhr);
         }
       });
+    }
 
   
-  }
+
+  
 </script>
 </body>
 </html>

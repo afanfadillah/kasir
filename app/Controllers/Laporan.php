@@ -20,11 +20,30 @@ class Laporan extends BaseController
                 $dataTransaksi[]=$item;
             }
         }
-        dd($dataTransaksi);
+        
 
         $data = array(
             'title' => 'Laporan',
+            'transaksi'=>$dataTransaksi
         );
         return view('laporan', $data);
+    }
+    public function print()
+    {
+        $transaksi = $this->modelTransaksi->findAll();
+
+        $dataTransaksi=[];
+        foreach ($transaksi as $key => $value) {
+            foreach (json_decode($value->itemTransaksi)->data as $i => $item) {
+                $dataTransaksi[]=$item;
+            }
+        }
+        
+
+        $data = array(
+            'title' => 'Laporan',
+            'transaksi'=>$dataTransaksi
+        );
+        return view('laporan_print', $data);
     }
 }
