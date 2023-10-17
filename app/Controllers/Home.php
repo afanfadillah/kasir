@@ -32,7 +32,8 @@ class Home extends BaseController
             $kategorilist=$this->modelProduk->getAllproduk()->get()->getResult();
         }
 
-        $keranjang=$this->modelKeranjang->findAll();
+        $keranjang=$this->modelKeranjang->where(['onHold' => 0])->findAll();
+        $keranjangHold=$this->modelKeranjang->where(['onHold' => 1])->findAll();
 
         $total = 0;
 
@@ -54,6 +55,7 @@ class Home extends BaseController
             'kategori'=>$this->modelKategori->findAll(),
             'produk'=>$kategorilist,
             'keranjang'=>$keranjang,
+            'keranjangHold'=>$keranjangHold,
             'total'=>$total,
         ];
         
@@ -78,7 +80,7 @@ class Home extends BaseController
             'idProduk'=>$id,
         ];
         $produk=$this->modelProduk->where($data)->first();
-        $keranjang=$this->modelKeranjang->findAll();
+        $keranjang=$this->modelKeranjang->where(['onHold' => 0])->findAll();
         $itemKerangjang= [];
 
         if(count($keranjang)==0){
@@ -89,7 +91,7 @@ class Home extends BaseController
             $itemKeranjang['jumlah']= 1;
             $itemKeranjang['keterangan']= '';
             $dataInsert=[
-                'id'=>1,
+                'onHold'=>0,
                 'data'=>json_encode(['data' => [$itemKeranjang]])
             ];
             $this->modelKeranjang->insert($dataInsert);
@@ -126,9 +128,9 @@ class Home extends BaseController
             $dataUpdate = [
                 'data' => json_encode(['data' => $mergedData])
             ];
-            $this->modelKeranjang->update(1, $dataUpdate);
+            $this->modelKeranjang->updateKeranjang($dataUpdate,['onHold'=>0]);
         }
-        $keranjangNew = $this->modelKeranjang->where(['id' => 1])->findAll();
+        $keranjangNew = $this->modelKeranjang->where(['onHold'=>0])->findAll();
         echo $keranjangNew[0]->data;
 
 
@@ -136,7 +138,7 @@ class Home extends BaseController
 public function hapusKeranjang()
     {
         $id=$this->request->getVar('idProduk');
-        $keranjang=$this->modelKeranjang->findAll();
+        $keranjang=$this->modelKeranjang->where(['onHold'=>0])->findAll();
         $keranjang = json_decode($keranjang[0]->data)->data;
         $itemKeranjang = [];
 
@@ -151,13 +153,13 @@ public function hapusKeranjang()
         ];
         $this->modelKeranjang->update(1,$dataUpdate);
 
-        $keranjangNew = $this->modelKeranjang->where(['id' => 1])->findAll();
+        $keranjangNew = $this->modelKeranjang->where(['onHold'=>0])->findAll();
         echo $keranjangNew[0]->data;
     }
 
     public function bayarPesanan()
     {
-        $keranjang = $this->modelKeranjang->where(['id' => 1])->findAll();
+        $keranjang = $this->modelKeranjang->where(['onHold'=>0])->findAll();
 
         if (count($keranjang) == 0){
             echo json_encode(['status' => false]);
@@ -173,7 +175,7 @@ public function hapusKeranjang()
     }
     public function simpanTransaksi()
     {
-        $keranjangRaw = $this->modelKeranjang->where(['id'=> 1])->findAll();
+        $keranjangRaw = $this->modelKeranjang->where(['onHold'=>0])->findAll();
         $keranjang = json_decode($keranjangRaw[0]->data)->data;
         $grandTotal = 0;
         foreach ($keranjang as $key => $value) {
@@ -195,7 +197,7 @@ public function hapusKeranjang()
 
         ];
         if ($this->modelTransaksi->insert($dataSimpan)){
-            $this->modelKeranjang->delete(1);
+            $this->modelKeranjang->where(['onHold'=>0])->delete();
             if (((int)$this->request->getVar('cash')-(int)$grandTotal) > 0){
                 $kembalian=(int)$this->request->getVar('cash')-(int)$grandTotal;
                 session()->setFlashdata('messsage','kembalian sebesar '.  number_to_currency((float)$kembalian,'IDR','id_ID') );
@@ -221,5 +223,27 @@ public function hapusKeranjang()
         
         
         return view('gagal',$data);
+    }
+    function holdKeranjang() {
+        $keranjang= $this->modelKeranjang->where(['onHold'=>0])->findAll();
+        if (count($keranjang) == 0){   //jika tabel keranjang kosong
+            session()->setFlashdata('failed','Keranjang Kosong');
+            return redirect()->to('kasir');
+        }else{
+            if (count(json_decode($keranjang[0]->data)->data) == 0){ //jika tabel keranjang berisi tapi array nya kosong
+                session()->setFlashdata('failed','Keranjang Kosong');
+            }else{
+                $this->modelKeranjang->updateKeranjang(['onHold'=>1],['onHold'=>0]);
+                session()->setFlashdata('sukses','Keranjang Berhasil Dihold');
+            }
+            return redirect()->to('kasir');
+        }
+        
+    }
+    public function unholdKeranjang($id){
+        $this->modelKeranjang->updateKeranjang(['onHold'=>1],['onHold'=>0]);
+        $this->modelKeranjang->update($id,['onHold'=>0]);
+        session()->setFlashdata('sukses','Keranjang Berhasil Di unhold');
+        return redirect()->to('kasir');
     }
 }

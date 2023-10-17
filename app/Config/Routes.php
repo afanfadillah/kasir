@@ -9,6 +9,9 @@ $routes->get('/', 'Home::index');
 $routes->get('welcome', 'Home::welcome');
 $routes->get('laporan', 'Laporan::index');
 $routes->get('print', 'Laporan::print');
+$routes->get('holdKeranjang', 'Home::holdKeranjang');
+$routes->get('unholdKeranjang/(:num)', 'Home::unholdKeranjang/$1');
+
 
 $routes->get('kasir', 'Home::index',['filter'=>'role:manager,kasir']);
 $routes->post('kasir', 'Home::addKeranjang');

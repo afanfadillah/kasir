@@ -12,8 +12,11 @@ class KeranjangModel extends Model
     protected $returnType = 'object';
     
 
-    protected $allowedFields = ['id','data'];
+    protected $allowedFields = ['id','data','onHold'];
 
 
-   
+   public function updateKeranjang($data,$where) {
+    $this->db->table($this->table)->where($where)->update($data);
+    
+   }
 }

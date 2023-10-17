@@ -28,6 +28,22 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
+        <?php if (session()->getFlashdata('success')): ?>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Informasi</strong> <?=session()->getFlashdata('success')?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        <?php endif ?>
+        <?php if (session()->getFlashdata('failed')): ?>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Informasi</strong> <?=session()->getFlashdata('failed')?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        <?php endif ?>
         <div class="callout callout-info d-flex align-items-center justify-content-between">
           <h1 class="harga">Total : <?= number_to_currency($total,'Rp.','id_ID',2) ?></h1>
           <button type="submit" class="btn btn-success ml-auto" onclick="bayar('<?= user()->email?>')">Bayar</button>
@@ -84,6 +100,17 @@
             <div class="card">
               <div class="card-header">
                 Keranjang
+                <div class="btn-group dropleft float-right">
+                  <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <a href="/holdKeranjang" class="btn btn-xs btn-info"><i class="fas fa-hand-paper"></i> <?= count($keranjangHold)?></a>
+                  <div class="dropdown-menu">
+                    <?php $no=0; foreach ($keranjangHold as $key => $value):?>
+                    <a class="dropdown-item" href="/unholdKeranjang/<?= $value->id ?>">Hold #<?= ++$no?></a>
+                    <?php endforeach?>
+                    </div>
+                </div>
               </div>
               <div class="card-body">
                 <div id="itemKeranjang">
